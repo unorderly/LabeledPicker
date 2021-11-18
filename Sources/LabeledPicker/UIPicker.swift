@@ -36,17 +36,9 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     var columns: [Column] {
         didSet {
             self.reloadAllComponents()
-            self.labelViews.keys.forEach {
-                if self.columns.safe(at: $0)?.isLabel ?? false {
-                    self.labelViews[$0]?.removeFromSuperview()
-                    self.labelViews[$0] = nil
-                }
-            }
         }
     }
-    
-    private var labelViews: [Int: UIView] = [:]
-    
+        
     init(columns: [Column],
          selected: @escaping (Int, Int) -> Void,
          views: @escaping (Int, Int, UIView?) -> UIView) {
@@ -76,11 +68,6 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let view = self.views(component, row, view)
-        if self.columns.safe(at: component)?.isLabel ?? false {
-            view.alpha = 0
-        } else {
-            view.alpha = 1
-        }
         return view
     }
     
@@ -92,32 +79,28 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
         fatalError("init(coder:) has not been implemented")
     }
     
-    private static let pickerMargin: CGFloat = 9
-    private static let pickerSpacing: CGFloat = 5
-    
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        var x = Self.pickerMargin
         for (index, column) in columns.enumerated() {
-            let rowSize = self.rowSize(forComponent: index)
-            if column.isLabel {
-                let view = self.views(index, 0, self.labelViews[index])
-                if view !== self.labelViews[index] {
-                    self.labelViews[index]?.removeFromSuperview()
-                    self.labelViews[index] = view
-                }
-                if view.superview !== self {
-                    self.addSubview(view)
-                }
-                view.frame = CGRect(origin: .init(x: x,
-                                                  y: self.bounds.height / 2 - rowSize.height / 2),
-                                    size: rowSize)
-                view.setNeedsLayout()
-                print(view.frame)
+            if column.isLabel,
+               let view = self.view(forRow: 0, forComponent: index)?.searchSuperviews(for: "UIPickerTableView", maxDepth: 5) as? UIScrollView {
+                view.isScrollEnabled = false
             }
-            x += rowSize.width + Self.pickerSpacing
         }
-        print(self.bounds)
+    }
+}
+
+extension UIView {
+    func searchSuperviews(for type: String, maxDepth: Int) -> UIView? {
+        guard maxDepth > 0, let superview = self.superview else {
+            return nil
+        }
+        let name = String(describing: Swift.type(of: superview))
+        if name == type {
+            return superview
+        } else {
+            return superview.searchSuperviews(for: type, maxDepth: maxDepth - 1)
+        }
     }
 }
