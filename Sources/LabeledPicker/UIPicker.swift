@@ -9,19 +9,7 @@ import UIKit
 
 
 class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
-    enum Column {
-        case value(size: Int)
-        case label
-        
-        var isLabel: Bool {
-            switch self {
-            case .value:
-                return false
-            case .label:
-                return true
-            }
-        }
-    }
+
     var views: (Int, Int, UIView?) -> UIView
     
     var labels: (Int, UIView?) -> UIView?
@@ -35,19 +23,13 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
         }
     }
     
-    var columns: [Column] {
+    var columns: [Int] {
         didSet {
             self.reloadAllComponents()
-//            self.labelViews.keys.forEach {
-//                if self.columns.safe(at: $0)?.isLabel ?? false {
-//                    self.labelViews[$0]?.removeFromSuperview()
-//                    self.labelViews[$0] = nil
-//                }
-//            }
         }
     }
         
-    init(columns: [Column],
+    init(columns: [Int],
          selected: @escaping (Int, Int) -> Void,
          labels: @escaping (Int, UIView?) -> UIView?,
          views: @escaping (Int, Int, UIView?) -> UIView) {
@@ -68,21 +50,11 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
         guard let column = self.columns.safe(at: component) else {
             return 0
         }
-        switch column {
-        case .value(let size):
-            return size
-        case .label:
-            return 1
-        }
+        return column
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let view = self.views(component, row, view)
-        if self.columns.safe(at: component)?.isLabel ?? false {
-             view.alpha = 0
-         } else {
-             view.alpha = 1
-         }
         return view
     }
     
@@ -99,16 +71,8 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     override func layoutSubviews() {
         super.layoutSubviews()
         
-//        for (index, column) in columns.enumerated() {
-//            if column.isLabel,
-//               let view = self.view(forRow: 0, forComponent: index)?.searchSuperviews(for: "UIPickerTableView", maxDepth: 5) as? UIScrollView {
-//                view.isScrollEnabled = false
-//            }
-//        }
-        
         for index in columns.indices {
-            let rowSize = self.rowSize(forComponent: index)
-            if let view = self.labels(index, self.labelViews[index]), let reference = self.view(forRow: 0, forComponent: index) {
+            if let view = self.labels(index, self.labelViews[index]), let reference = self.view(forRow: self.selectedRow(inComponent: index), forComponent: index) {
                 if view !== self.labelViews[index] {
                     self.labelViews[index]?.removeFromSuperview()
                     self.labelViews[index] = view
@@ -121,20 +85,6 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
                 self.labelViews[index]?.removeFromSuperview()
                 self.labelViews[index] = nil
             }
-        }
-    }
-}
-
-extension UIView {
-    func searchSuperviews(for type: String, maxDepth: Int) -> UIView? {
-        guard maxDepth > 0, let superview = self.superview else {
-            return nil
-        }
-        let name = String(describing: Swift.type(of: superview))
-        if name == type {
-            return superview
-        } else {
-            return superview.searchSuperviews(for: type, maxDepth: maxDepth - 1)
         }
     }
 }
