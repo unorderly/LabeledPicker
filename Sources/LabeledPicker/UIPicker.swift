@@ -8,13 +8,17 @@
 import UIKit
 
 
-class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
+class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource, UIPickerViewAccessibilityDelegate {
 
     var views: (Int, Int, UIView?) -> UIView
     
     var labels: (Int, UIView?) -> UIView?
     
     var selected: (Int, Int) -> Void
+    
+    var accessibilityColumn: (Int) -> String
+    
+    var accessibilityValueString: (Int, Int) -> String
     
     func select(column: Int, row: Int, animated: Bool = false) {
         let current = self.selectedRow(inComponent: column)
@@ -32,11 +36,15 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     init(columns: [Int],
          selected: @escaping (Int, Int) -> Void,
          labels: @escaping (Int, UIView?) -> UIView?,
-         views: @escaping (Int, Int, UIView?) -> UIView) {
+         views: @escaping (Int, Int, UIView?) -> UIView,
+         accessibilityColumn: @escaping (Int) -> String,
+         accessibilityValueString: @escaping (Int, Int) -> String) {
         self.columns = columns
         self.selected = selected
         self.labels = labels
         self.views = views
+        self.accessibilityColumn = accessibilityColumn
+        self.accessibilityValueString = accessibilityValueString
         super.init(frame: .zero)
         self.delegate = self
         self.dataSource = self
@@ -58,8 +66,16 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
         return view
     }
     
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return accessibilityValueString(component, row)
+    }
+    
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         self.selected(component, row)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, accessibilityLabelForComponent component: Int) -> String? {
+        return self.accessibilityColumn(component)
     }
     
     required init?(coder: NSCoder) {

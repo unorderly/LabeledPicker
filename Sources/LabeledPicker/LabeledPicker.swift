@@ -6,17 +6,19 @@ public struct Column {
     let size: Int
     let label: (() -> AnyView)?
     let content: (Int) -> AnyView
+    let accessibilityColumn: String
+    let accessibilityValue: (Int) -> String
     
-    public static func value<Content: View>(_ selected: Binding<Int>, size: Int, content: @escaping (Int) -> Content) -> Column {
-        return Column(selected: selected, size: size, label: nil, content: { AnyView(content($0)) })
+    public static func value<Content: View>(_ selected: Binding<Int>, size: Int, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping (Int) -> Content) -> Column {
+        return Column(selected: selected, size: size, label: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
     
-    public static func value<Content: View, Label: View>(_ selected: Binding<Int>, size: Int, @ViewBuilder label: @escaping () -> Label, @ViewBuilder content: @escaping (Int) -> Content) -> Column {
-        return Column(selected: selected, size: size, label: { AnyView(label()) }, content: { AnyView(content($0)) })
+    public static func value<Content: View, Label: View>(_ selected: Binding<Int>, size: Int, @ViewBuilder label: @escaping () -> Label, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, @ViewBuilder content: @escaping (Int) -> Content) -> Column {
+        return Column(selected: selected, size: size, label: { AnyView(label()) }, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
     
-    public static func label<Content: View>(content: @escaping () -> Content) -> Column {
-        return Column(selected: .constant(0), size: 1, label: { AnyView(content()) }, content: { _ in AnyView(EmptyView()) })
+    public static func label<Content: View>(accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping () -> Content) -> Column {
+        return Column(selected: .constant(0), size: 1, label: { AnyView(content()) }, content: { _ in AnyView(EmptyView()) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 }
 
@@ -49,7 +51,9 @@ struct LabeledPickerWrapper: UIViewRepresentable {
         let picker = CustomPickerView(columns: self.columns.map({ $0.size }),
                                       selected: self.selected,
                                       labels: self.labels,
-                                      views: self.views)
+                                      views: self.views,
+                                      accessibilityColumn: { self.columns.safe(at: $0)?.accessibilityColumn ?? "" },
+                                      accessibilityValueString: { self.columns.safe(at: $0)?.accessibilityValue($1) ?? "" })
         return picker
     }
     
