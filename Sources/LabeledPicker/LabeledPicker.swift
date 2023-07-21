@@ -43,10 +43,6 @@ struct LabeledPickerWrapper: UIViewRepresentable {
     
     var columns: [Column]
     
-    init(columns: [Column]) {
-        self.columns = columns
-    }
-    
     func makeUIView(context: Context) -> CustomPickerView {
         let picker = CustomPickerView(columns: self.columns.map({ $0.size }),
                                       selected: self.selected,

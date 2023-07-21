@@ -55,8 +55,7 @@ final class UIHostingView<Content: View>: UIView {
          let viewSubclassName = String(cString: class_getName(viewClass)).appending("_IgnoreSafeArea")
          if let viewSubclass = NSClassFromString(viewSubclassName) {
              object_setClass(view, viewSubclass)
-         }
-         else {
+         } else {
              guard let viewClassNameUtf8 = (viewSubclassName as NSString).utf8String else { return }
              guard let viewSubclass = objc_allocateClassPair(viewClass, viewClassNameUtf8, 0) else { return }
 
