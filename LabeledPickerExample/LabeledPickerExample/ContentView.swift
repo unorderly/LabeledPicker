@@ -9,12 +9,12 @@ import SwiftUI
 import LabeledPicker
 
 struct ContentView: View {
-    
+
     @State var selected1 = 0
     @State var selected2 = 15
-    
-    
-    
+
+
+
     var body: some View {
         Text("\(selected1) - \(selected2)")
         Button("Reset") {
@@ -39,8 +39,8 @@ struct ContentView: View {
                 .aligned(to: .leading)
             }),
             .label { Image(systemName: "arrow.right") },
-            
-                .value(.constant(9), size: 24, content: { Text("\($0)") }),
+
+            .value(.constant(9), size: 24, content: { Text("\($0)") }),
             .value(.constant(41), size: 60, content: { Text("\($0)") }),
             .value(.constant(1), size: 6, content: {  value in
                 Group {
@@ -65,8 +65,8 @@ struct ContentView: View {
                 .aligned(to: .leading)
             })
         )
-            .font(.title3)
-        
+        .font(.title3)
+
         LabeledPicker(
             .value(.constant(9 + 24), size: 24*3, content: { value in
                 Group {
@@ -96,19 +96,19 @@ struct ContentView: View {
                 .aligned(to: .leading)
             }),
             .label { Image(systemName: "arrow.right") },
-            
-                .value(.constant(9 + 24), size: 24*3, content: { value in
-                    Group {
-                        switch value {
-                        case 0...23:
-                            Text("\(value)\u{207B}\u{00B9}")
-                        case 24...47:
-                            Text("\(value - 24)")
-                        default:
-                            Text("\(value - 48)\u{207A}\u{00B9}")
-                        }
+
+            .value(.constant(9 + 24), size: 24*3, content: { value in
+                Group {
+                    switch value {
+                    case 0...23:
+                        Text("\(value)\u{207B}\u{00B9}")
+                    case 24...47:
+                        Text("\(value - 24)")
+                    default:
+                        Text("\(value - 48)\u{207A}\u{00B9}")
                     }
-                }),
+                }
+            }),
             .value(.constant(41), size: 60, content: { Text("\($0)") }),
             .value(.constant(1), size: 2, content: {  value in
                 Group {
@@ -124,10 +124,10 @@ struct ContentView: View {
                 .font(.footnote.bold())
                 .aligned(to: .leading)
             })
-            
+
         )
-            .font(.title3)
-        
+        .font(.title3)
+
         //        LabeledPicker(
         //            .value(.constant(1), size: 24, content: {
         //                Text("\($0)").font(.title3)
@@ -170,7 +170,7 @@ struct ContentView_Previews: PreviewProvider {
 
 struct AlignmentModifier: ViewModifier {
     let edges: Edge.Set
-    
+
     func body(content: Content) -> some View {
         VStack {
             if self.edges.contains(.bottom) {
@@ -182,7 +182,7 @@ struct AlignmentModifier: ViewModifier {
                 }
                 content
                     .multilineTextAlignment(self.edges.textAlignment)
-                
+
                 if self.edges.contains(.leading) {
                     Spacer(minLength: 0)
                 }
@@ -223,7 +223,7 @@ public extension View {
     func aligned(to edges: Edge.Set) -> some View {
         ModifiedContent(content: self, modifier: AlignmentModifier(edges: edges))
     }
-    
+
     func alignment(_ alignment: TextAlignment) -> some View {
         ModifiedContent(content: self, modifier: AlignmentModifier(edges: alignment.edges))
     }
