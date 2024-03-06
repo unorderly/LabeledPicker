@@ -14,8 +14,8 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     
     var labels: (Int, UIView?) -> UIView?
     
-    var selected: (Int, Int) -> Void
     
+    var selected: (Int, Int, CustomPickerView) -> Void
     var accessibilityColumn: (Int) -> String
     
     var accessibilityValueString: (Int, Int) -> String
@@ -34,7 +34,7 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     }
         
     init(columns: [Int],
-         selected: @escaping (Int, Int) -> Void,
+         selected: @escaping (Int, Int, CustomPickerView) -> Void,
          labels: @escaping (Int, UIView?) -> UIView?,
          views: @escaping (Int, Int, UIView?) -> UIView,
          accessibilityColumn: @escaping (Int) -> String,
@@ -71,7 +71,7 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.selected(component, row)
+        self.selected(component, row, self)
     }
     
     func pickerView(_ pickerView: UIPickerView, accessibilityLabelForComponent component: Int) -> String? {

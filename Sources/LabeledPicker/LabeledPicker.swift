@@ -80,8 +80,15 @@ struct LabeledPickerWrapper: UIViewRepresentable {
         hosting.set(value: label)
         return hosting
     }
-    
-    func selected(column: Int, row: Int) {
-        self.columns.safe(at: column)?.selected.wrappedValue = row
+
+    func selected(column: Int, row: Int, picker: CustomPickerView) {
+        guard let binding = self.columns.safe(at: column)?.selected else {
+            return
+        }
+        let oldVal = binding.wrappedValue
+        binding.wrappedValue = row
+        if binding.wrappedValue != row {
+            picker.select(column: column, row: binding.wrappedValue, animated: true)
+        }
     }
 }
