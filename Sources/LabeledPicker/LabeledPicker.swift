@@ -81,7 +81,6 @@ struct LabeledPickerWrapper: UIViewRepresentable {
         guard let binding = self.columns.safe(at: column)?.selected else {
             return
         }
-        let oldVal = binding.wrappedValue
         binding.wrappedValue = row
         if binding.wrappedValue != row {
             picker.select(column: column, row: binding.wrappedValue, animated: true)
