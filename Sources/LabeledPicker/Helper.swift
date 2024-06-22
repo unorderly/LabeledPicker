@@ -1,15 +1,8 @@
-//
-//  File.swift
-//
-//
-//  Created by Leo Mehlig on 12.11.21.
-//
-
 import Foundation
 import SwiftUI
 
-public extension Collection {
-    func safe(at index: Index) -> Iterator.Element? {
+extension Collection {
+    public func safe(at index: Index) -> Iterator.Element? {
         guard index >= startIndex, index < endIndex
         else {
             return nil
@@ -17,8 +10,6 @@ public extension Collection {
         return self[index]
     }
 }
-
-
 
 final class UIHostingView<Content: View>: UIView {
     private var hosting: UIHostingController<Content>?
@@ -61,7 +52,7 @@ final class UIHostingView<Content: View>: UIView {
 
             if let method = class_getInstanceMethod(UIView.self, #selector(getter: UIView.safeAreaInsets)) {
                 let safeAreaInsets: @convention(block) (AnyObject) -> UIEdgeInsets = { _ in
-                    return .zero
+                    .zero
                 }
                 class_addMethod(viewSubclass, #selector(getter: UIView.safeAreaInsets), imp_implementationWithBlock(safeAreaInsets), method_getTypeEncoding(method))
             }

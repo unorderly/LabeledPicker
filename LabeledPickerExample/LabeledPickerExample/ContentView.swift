@@ -1,131 +1,116 @@
-//
-//  ContentView.swift
-//  LabeledPickerExample
-//
-//  Created by Leo Mehlig on 12.11.21.
-//
-
-import SwiftUI
 import LabeledPicker
+import SwiftUI
 
 struct ContentView: View {
-
-    @State var selected1 = 0
-    @State var selected2 = 15
-
-
+    @State private var selected1 = 0
+    @State private var selected2 = 15
 
     var body: some View {
-        Text("\(selected1) - \(selected2)")
+        Text("\(self.selected1) - \(self.selected2)")
         Button("Reset") {
             self.selected2 = 0
             self.selected1 = 20
         }
-        LabeledPicker(
-            .value(.constant(9), size: 24, content: { Text("\($0)") }),
-            .value(.constant(41), size: 60, content: { Text("\($0)") }),
-            .value(.constant(1), size: 3, content: {  value in
-                Group {
-                    switch value {
-                    case 0:
-                        Text("-1")
-                    case 2:
-                        Text("+1")
-                    default:
-                        EmptyView()
-                    }
-                }
-                .font(.footnote.bold())
-                .aligned(to: .leading)
-            }),
-            .label { Image(systemName: "arrow.right") },
+        LabeledPicker(.value(.constant(9), size: 24, content: { Text("\($0)") }),
+                      .value(.constant(41), size: 60, content: { Text("\($0)") }),
+                      .value(.constant(1), size: 3, content: { value in
+                          Group {
+                              switch value {
+                              case 0:
+                                  Text("-1")
+                              case 2:
+                                  Text("+1")
+                              default:
+                                  EmptyView()
+                              }
+                          }
+                          .font(.footnote.bold())
+                          .aligned(to: .leading)
+                      }),
+                      .label { Image(systemName: "arrow.right") },
 
-            .value(.constant(9), size: 24, content: { Text("\($0)") }),
-            .value(.constant(41), size: 60, content: { Text("\($0)") }),
-            .value(.constant(1), size: 6, content: {  value in
-                Group {
-                    switch value {
-                    case 0:
-                        Text("AM\u{207B}\u{00B9}")
-                    case 1:
-                        Text("PM\u{207B}\u{00B9}")
-                    case 2:
-                        Text("AM")
-                    case 3:
-                        Text("PM")
-                    case 4:
-                        Text("AM\u{207A}\u{00B9}")
-                    case 5:
-                        Text("PM\u{207A}\u{00B9}")
-                    default:
-                        EmptyView()
-                    }
-                }
-                .font(.footnote.bold())
-                .aligned(to: .leading)
-            })
-        )
-        .font(.title3)
+                      .value(.constant(9), size: 24, content: { Text("\($0)") }),
+                      .value(.constant(41), size: 60, content: { Text("\($0)") }),
+                      .value(.constant(1), size: 6, content: { value in
+                          Group {
+                              switch value {
+                              case 0:
+                                  Text("AM\u{207B}\u{00B9}")
+                              case 1:
+                                  Text("PM\u{207B}\u{00B9}")
+                              case 2:
+                                  Text("AM")
+                              case 3:
+                                  Text("PM")
+                              case 4:
+                                  Text("AM\u{207A}\u{00B9}")
+                              case 5:
+                                  Text("PM\u{207A}\u{00B9}")
+                              default:
+                                  EmptyView()
+                              }
+                          }
+                          .font(.footnote.bold())
+                          .aligned(to: .leading)
+                      }))
+                      .font(.title3)
 
-        LabeledPicker(
-            .value(.constant(9 + 24), size: 24*3, content: { value in
-                Group {
-                    switch value {
-                    case 0...23:
-                        Text("\(value)\u{207B}\u{00B9}")
-                    case 24...47:
-                        Text("\(value - 24)")
-                    default:
-                        Text("\(value - 48)\u{207A}\u{00B9}")
-                    }
+        LabeledPicker(.value(.constant(9 + 24), size: 24 * 3, content: { value in
+            Group {
+                switch value {
+                case 0...23:
+                    Text("\(value)\u{207B}\u{00B9}")
+                case 24...47:
+                    Text("\(value - 24)")
+                default:
+                    Text("\(value - 48)\u{207A}\u{00B9}")
                 }
-            }),
-            .value(.constant(41), size: 60, content: { Text("\($0)") }),
-            .value(.constant(1), size: 2, content: {  value in
-                Group {
-                    switch value {
-                    case 0:
-                        Text("AM")
-                    case 1:
-                        Text("PM")
-                    default:
-                        EmptyView()
-                    }
+            }
+        }),
+        .value(.constant(41), size: 60, content: { Text("\($0)") }),
+        .value(.constant(1), size: 2, content: { value in
+            Group {
+                switch value {
+                case 0:
+                    Text("AM")
+                case 1:
+                    Text("PM")
+                default:
+                    EmptyView()
                 }
-                .font(.footnote.bold())
-                .aligned(to: .leading)
-            }),
-            .label { Image(systemName: "arrow.right") },
+            }
+            .font(.footnote.bold())
+            .aligned(to: .leading)
+        }),
+        .label { Image(systemName: "arrow.right") },
 
-            .value(.constant(9 + 24), size: 24*3, content: { value in
-                Group {
-                    switch value {
-                    case 0...23:
-                        Text("\(value)\u{207B}\u{00B9}")
-                    case 24...47:
-                        Text("\(value - 24)")
-                    default:
-                        Text("\(value - 48)\u{207A}\u{00B9}")
-                    }
+        .value(.constant(9 + 24), size: 24 * 3, content: { value in
+            Group {
+                switch value {
+                case 0...23:
+                    Text("\(value)\u{207B}\u{00B9}")
+                case 24...47:
+                    Text("\(value - 24)")
+                default:
+                    Text("\(value - 48)\u{207A}\u{00B9}")
                 }
-            }),
-            .value(.constant(41), size: 60, content: { Text("\($0)") }),
-            .value(.constant(1), size: 2, content: {  value in
-                Group {
-                    switch value {
-                    case 0:
-                        Text("AM")
-                    case 1:
-                        Text("PM")
-                    default:
-                        EmptyView()
-                    }
+            }
+        }),
+        .value(.constant(41), size: 60, content: { Text("\($0)") }),
+        .value(.constant(1), size: 2, content: { value in
+            Group {
+                switch value {
+                case 0:
+                    Text("AM")
+                case 1:
+                    Text("PM")
+                default:
+                    EmptyView()
                 }
-                .font(.footnote.bold())
-                .aligned(to: .leading)
-            })
-
-        )
+            }
+            .font(.footnote.bold())
+            .aligned(to: .leading)
+        }))
         .font(.title3)
 
         //        LabeledPicker(
@@ -219,12 +204,12 @@ extension TextAlignment {
     }
 }
 
-public extension View {
-    func aligned(to edges: Edge.Set) -> some View {
+extension View {
+    public func aligned(to edges: Edge.Set) -> some View {
         ModifiedContent(content: self, modifier: AlignmentModifier(edges: edges))
     }
 
-    func alignment(_ alignment: TextAlignment) -> some View {
+    public func alignment(_ alignment: TextAlignment) -> some View {
         ModifiedContent(content: self, modifier: AlignmentModifier(edges: alignment.edges))
     }
 }

@@ -3,19 +3,15 @@
 
 import PackageDescription
 
-let package = Package(
-    name: "LabeledPicker",
-    platforms: [
-        .iOS(.v14)
-    ],
-    products: [
-        .library(
-            name: "LabeledPicker",
-            targets: ["LabeledPicker"]),
-    ],
-    targets: [
-        .target(
-            name: "LabeledPicker",
-            dependencies: []),
-    ]
-)
+let package = Package(name: "LabeledPicker",
+                      platforms: [
+                          .iOS(.v14)
+                      ],
+                      products: [
+                          .library(name: "LabeledPicker",
+                                   targets: ["LabeledPicker"])
+                      ],
+                      targets: [
+                          .target(name: "LabeledPicker",
+                                  dependencies: [])
+                      ])

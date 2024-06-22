@@ -1,10 +1,3 @@
-//
-//  LabeledPickerExampleApp.swift
-//  LabeledPickerExample
-//
-//  Created by Leo Mehlig on 12.11.21.
-//
-
 import SwiftUI
 
 @main

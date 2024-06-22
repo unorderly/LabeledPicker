@@ -10,15 +10,15 @@ public struct Column {
     let accessibilityValue: (Int) -> String
 
     public static func value<Content: View>(_ selected: Binding<Int>, size: Int, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping (Int) -> Content) -> Column {
-        return Column(selected: selected, size: size, label: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
+        Column(selected: selected, size: size, label: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 
     public static func value<Content: View, Label: View>(_ selected: Binding<Int>, size: Int, @ViewBuilder label: @escaping () -> Label, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, @ViewBuilder content: @escaping (Int) -> Content) -> Column {
-        return Column(selected: selected, size: size, label: { AnyView(label()) }, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
+        Column(selected: selected, size: size, label: { AnyView(label()) }, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 
     public static func label<Content: View>(accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping () -> Content) -> Column {
-        return Column(selected: .constant(0), size: 1, label: { AnyView(content()) }, content: { _ in AnyView(EmptyView()) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
+        Column(selected: .constant(0), size: 1, label: { AnyView(content()) }, content: { _ in AnyView(EmptyView()) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 }
 
@@ -34,17 +34,15 @@ public struct LabeledPicker: View {
     }
 
     public var body: some View {
-        LabeledPickerWrapper(columns: columns)
+        LabeledPickerWrapper(columns: self.columns)
     }
 }
 
 struct LabeledPickerWrapper: UIViewRepresentable {
-
-
     var columns: [Column]
 
     func makeUIView(context: Context) -> CustomPickerView {
-        let picker = CustomPickerView(columns: self.columns.map({ $0.size }),
+        let picker = CustomPickerView(columns: self.columns.map(\.size),
                                       selected: self.selected,
                                       labels: self.labels,
                                       views: self.views,
@@ -55,12 +53,11 @@ struct LabeledPickerWrapper: UIViewRepresentable {
 
     func updateUIView(_ picker: CustomPickerView, context: Context) {
         picker.views = self.views
-        picker.columns = self.columns.map({ $0.size })
-        for (index, column) in columns.enumerated() {
+        picker.columns = self.columns.map(\.size)
+        for (index, column) in self.columns.enumerated() {
             picker.select(column: index, row: column.selected.wrappedValue, animated: true)
         }
     }
-
 
     func views(column: Int, row: Int, resusable: UIView?) -> UIView {
         let hosting = resusable as? UIHostingView<AnyView> ?? UIHostingView<AnyView>()

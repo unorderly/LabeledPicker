@@ -1,20 +1,10 @@
-//
-//  File.swift
-//
-//
-//  Created by Leo Mehlig on 12.11.21.
-//
-
 import UIKit
 
-
 class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource, UIPickerViewAccessibilityDelegate {
-
     var views: (Int, Int, UIView?) -> UIView
 
     var labels: (Int, UIView?) -> UIView?
-    
-    
+
     var selected: (Int, Int, CustomPickerView) -> Void
     var accessibilityColumn: (Int) -> String
 
@@ -67,7 +57,7 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     }
 
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return accessibilityValueString(component, row)
+        self.accessibilityValueString(component, row)
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -75,9 +65,10 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     }
 
     func pickerView(_ pickerView: UIPickerView, accessibilityLabelForComponent component: Int) -> String? {
-        return self.accessibilityColumn(component)
+        self.accessibilityColumn(component)
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -87,7 +78,7 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        for index in columns.indices {
+        for index in self.columns.indices {
             if let view = self.labels(index, self.labelViews[index]), let reference = self.view(forRow: self.selectedRow(inComponent: index), forComponent: index) {
                 if view !== self.labelViews[index] {
                     self.labelViews[index]?.removeFromSuperview()
