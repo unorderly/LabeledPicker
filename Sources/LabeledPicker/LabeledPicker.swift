@@ -59,6 +59,13 @@ struct LabeledPickerWrapper: UIViewRepresentable {
         }
     }
 
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: CustomPickerView, context: Context) -> CGSize {
+        let proposedWidth = proposal.width ?? uiView.bounds.width
+        // Keep the native picker height; widen to the proposed width.
+        let height = uiView.intrinsicContentSize.height
+        return CGSize(width: proposedWidth, height: height)
+    }
+
     func views(column: Int, row: Int, resusable: UIView?) -> UIView {
         let hosting = resusable as? UIHostingView<AnyView> ?? UIHostingView<AnyView>()
         hosting.set(value: self.columns.safe(at: column)?.content(row) ?? AnyView(EmptyView()))
