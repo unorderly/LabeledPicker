@@ -4,6 +4,7 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     var views: (Int, Int, UIView?) -> UIView
 
     var labels: (Int, UIView?) -> UIView?
+    var actions: (Int) -> (() -> Void)?
 
     var selected: (Int, Int, CustomPickerView) -> Void
     var accessibilityColumn: (Int) -> String
@@ -26,12 +27,14 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     init(columns: [Int],
          selected: @escaping (Int, Int, CustomPickerView) -> Void,
          labels: @escaping (Int, UIView?) -> UIView?,
+         actions: @escaping (Int) -> (() -> Void)?,
          views: @escaping (Int, Int, UIView?) -> UIView,
          accessibilityColumn: @escaping (Int) -> String,
          accessibilityValueString: @escaping (Int, Int) -> String) {
         self.columns = columns
         self.selected = selected
         self.labels = labels
+        self.actions = actions
         self.views = views
         self.accessibilityColumn = accessibilityColumn
         self.accessibilityValueString = accessibilityValueString
@@ -80,6 +83,7 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     }
 
     private var labelViews: [Int: UIView] = [:]
+    private var labelActions: [Int: () -> Void] = [:]
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -90,6 +94,16 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
                     self.labelViews[index]?.removeFromSuperview()
                     self.labelViews[index] = view
                 }
+
+                if self.labelActions[index] == nil, let action = self.actions(index) {
+                    self.labelActions[index] = action
+                    view.isUserInteractionEnabled = true
+                    let tap = UITapGestureRecognizer(target: self, action: #selector(self.labelTapped(_:)))
+                    tap.cancelsTouchesInView = true
+                    view.addGestureRecognizer(tap)
+                    view.tag = index
+                }
+
                 if view.superview !== self {
                     self.addSubview(view)
                 }
@@ -97,7 +111,25 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
             } else {
                 self.labelViews[index]?.removeFromSuperview()
                 self.labelViews[index] = nil
+                self.labelActions[index] = nil
             }
         }
+    }
+
+    @objc private func labelTapped(_ gesture: UITapGestureRecognizer) {
+        guard let view = gesture.view else { return }
+        self.labelActions[view.tag]?()
+    }
+
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        for (index, labelView) in self.labelViews {
+            if self.labelActions[index] != nil {
+                let convertedPoint = labelView.convert(point, from: self)
+                if labelView.bounds.contains(convertedPoint) {
+                    return labelView
+                }
+            }
+        }
+        return super.hitTest(point, with: event)
     }
 }

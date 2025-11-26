@@ -5,20 +5,25 @@ public struct Column {
     let selected: Binding<Int>
     let size: Int
     let label: (() -> AnyView)?
+    let action: (() -> Void)?
     let content: (Int) -> AnyView
     let accessibilityColumn: String
     let accessibilityValue: (Int) -> String
 
     public static func value<Content: View>(_ selected: Binding<Int>, size: Int, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping (Int) -> Content) -> Column {
-        Column(selected: selected, size: size, label: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
+        Column(selected: selected, size: size, label: nil, action: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 
     public static func value<Content: View, Label: View>(_ selected: Binding<Int>, size: Int, @ViewBuilder label: @escaping () -> Label, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, @ViewBuilder content: @escaping (Int) -> Content) -> Column {
-        Column(selected: selected, size: size, label: { AnyView(label()) }, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
+        Column(selected: selected, size: size, label: { AnyView(label()) }, action: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 
     public static func label<Content: View>(accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping () -> Content) -> Column {
-        Column(selected: .constant(0), size: 1, label: { AnyView(content()) }, content: { _ in AnyView(EmptyView()) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
+        Column(selected: .constant(0), size: 1, label: { AnyView(content()) }, action: nil, content: { _ in AnyView(EmptyView()) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
+    }
+
+    public static func label<Content: View>(accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, action: @escaping () -> Void, content: @escaping () -> Content) -> Column {
+        Column(selected: .constant(0), size: 1, label: { AnyView(content()) }, action: action, content: { _ in AnyView(EmptyView()) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 }
 
@@ -45,6 +50,7 @@ struct LabeledPickerWrapper: UIViewRepresentable {
         let picker = CustomPickerView(columns: self.columns.map(\.size),
                                       selected: self.selected,
                                       labels: self.labels,
+                                      actions: { self.columns.safe(at: $0)?.action },
                                       views: self.views,
                                       accessibilityColumn: { self.columns.safe(at: $0)?.accessibilityColumn ?? "" },
                                       accessibilityValueString: { self.columns.safe(at: $0)?.accessibilityValue($1) ?? "" })
