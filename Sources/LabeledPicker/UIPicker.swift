@@ -116,7 +116,8 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
         }
     }
 
-    @objc private func labelTapped(_ gesture: UITapGestureRecognizer) {
+    @objc
+    private func labelTapped(_ gesture: UITapGestureRecognizer) {
         guard let view = gesture.view else { return }
         self.labelActions[view.tag]?()
     }

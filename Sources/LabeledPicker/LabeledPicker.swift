@@ -10,19 +10,19 @@ public struct Column {
     let accessibilityColumn: String
     let accessibilityValue: (Int) -> String
 
-    public static func value<Content: View>(_ selected: Binding<Int>, size: Int, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping (Int) -> Content) -> Column {
+    public static func value(_ selected: Binding<Int>, size: Int, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping (Int) -> some View) -> Column {
         Column(selected: selected, size: size, label: nil, action: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 
-    public static func value<Content: View, Label: View>(_ selected: Binding<Int>, size: Int, @ViewBuilder label: @escaping () -> Label, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, @ViewBuilder content: @escaping (Int) -> Content) -> Column {
+    public static func value(_ selected: Binding<Int>, size: Int, @ViewBuilder label: @escaping () -> some View, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, @ViewBuilder content: @escaping (Int) -> some View) -> Column {
         Column(selected: selected, size: size, label: { AnyView(label()) }, action: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 
-    public static func label<Content: View>(accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping () -> Content) -> Column {
+    public static func label(accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, content: @escaping () -> some View) -> Column {
         Column(selected: .constant(0), size: 1, label: { AnyView(content()) }, action: nil, content: { _ in AnyView(EmptyView()) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 
-    public static func label<Content: View>(accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, action: @escaping () -> Void, content: @escaping () -> Content) -> Column {
+    public static func label(accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, action: @escaping () -> Void, content: @escaping () -> some View) -> Column {
         Column(selected: .constant(0), size: 1, label: { AnyView(content()) }, action: action, content: { _ in AnyView(EmptyView()) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 }

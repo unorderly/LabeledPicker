@@ -182,11 +182,11 @@ struct AlignmentModifier: ViewModifier {
 extension Edge.Set {
     var textAlignment: TextAlignment {
         if self.contains(.leading), !self.contains(.trailing) {
-            return .leading
+            .leading
         } else if self.contains(.trailing), !self.contains(.leading) {
-            return .trailing
+            .trailing
         } else {
-            return .center
+            .center
         }
     }
 }
@@ -195,11 +195,11 @@ extension TextAlignment {
     var edges: Edge.Set {
         switch self {
         case .leading:
-            return .leading
+            .leading
         case .center:
-            return .horizontal
+            .horizontal
         case .trailing:
-            return .trailing
+            .trailing
         }
     }
 }
