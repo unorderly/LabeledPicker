@@ -91,7 +91,9 @@ struct LabeledPickerWrapper: UIViewRepresentable {
         guard let binding = self.columns.safe(at: column)?.selected else {
             return
         }
-        binding.wrappedValue = row
+        withAnimation {
+            binding.wrappedValue = row
+        }
         if binding.wrappedValue != row {
             picker.select(column: column, row: binding.wrappedValue, animated: true)
         }
