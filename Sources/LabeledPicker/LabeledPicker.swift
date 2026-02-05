@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 public struct Column {
     let selected: Binding<Int>
@@ -39,9 +38,17 @@ public struct LabeledPicker: View {
     }
 
     public var body: some View {
+        #if canImport(UIKit)
         LabeledPickerWrapper(columns: self.columns)
+        #else
+        Text("LabeledPicker (macOS placeholder)")
+            .foregroundStyle(.secondary)
+        #endif
     }
 }
+
+#if canImport(UIKit)
+import UIKit
 
 struct LabeledPickerWrapper: UIViewRepresentable {
     var columns: [Column]
@@ -98,3 +105,4 @@ struct LabeledPickerWrapper: UIViewRepresentable {
         }
     }
 }
+#endif

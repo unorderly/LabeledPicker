@@ -11,6 +11,9 @@ extension Collection {
     }
 }
 
+#if canImport(UIKit)
+import UIKit
+
 final class UIHostingView<Content: View>: UIView {
     private var hosting: UIHostingController<Content>?
 
@@ -67,3 +70,4 @@ final class UIHostingView<Content: View>: UIView {
         }
     }
 }
+#endif

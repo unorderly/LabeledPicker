@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import UIKit
 
 class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource, UIPickerViewAccessibilityDelegate {
@@ -133,3 +134,4 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
         return super.hitTest(point, with: event)
     }
 }
+#endif
