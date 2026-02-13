@@ -43,7 +43,7 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
         self.dataSource = self
     }
 
-    // Allow SwiftUI to control the width by removing the intrinsic width.
+    /// Allow SwiftUI to control the width by removing the intrinsic width.
     override var intrinsicContentSize: CGSize {
         let base = super.intrinsicContentSize
         return CGSize(width: UIView.noIntrinsicMetric, height: base.height)
@@ -61,8 +61,7 @@ class CustomPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSour
     }
 
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let view = self.views(component, row, view)
-        return view
+        self.views(component, row, view)
     }
 
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {

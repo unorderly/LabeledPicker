@@ -47,14 +47,13 @@ struct LabeledPickerWrapper: UIViewRepresentable {
     var columns: [Column]
 
     func makeUIView(context: Context) -> CustomPickerView {
-        let picker = CustomPickerView(columns: self.columns.map(\.size),
-                                      selected: self.selected,
-                                      labels: self.labels,
-                                      actions: { self.columns.safe(at: $0)?.action },
-                                      views: self.views,
-                                      accessibilityColumn: { self.columns.safe(at: $0)?.accessibilityColumn ?? "" },
-                                      accessibilityValueString: { self.columns.safe(at: $0)?.accessibilityValue($1) ?? "" })
-        return picker
+        CustomPickerView(columns: self.columns.map(\.size),
+                         selected: self.selected,
+                         labels: self.labels,
+                         actions: { self.columns.safe(at: $0)?.action },
+                         views: self.views,
+                         accessibilityColumn: { self.columns.safe(at: $0)?.accessibilityColumn ?? "" },
+                         accessibilityValueString: { self.columns.safe(at: $0)?.accessibilityValue($1) ?? "" })
     }
 
     func updateUIView(_ picker: CustomPickerView, context: Context) {
