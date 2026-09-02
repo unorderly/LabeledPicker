@@ -14,7 +14,7 @@ public struct Column {
         Column(selected: selected, size: size, label: nil, action: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 
-    public static func value(_ selected: Binding<Int>, size: Int, @ViewBuilder label: @escaping () -> some View, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, @ViewBuilder content: @escaping (Int) -> some View) -> Column {
+    public static func value(_ selected: Binding<Int>, size: Int, @ContentBuilder label: @escaping () -> some View, accessibilityColumn: String, accessibilityValue: @escaping (Int) -> String, @ContentBuilder content: @escaping (Int) -> some View) -> Column {
         Column(selected: selected, size: size, label: { AnyView(label()) }, action: nil, content: { AnyView(content($0)) }, accessibilityColumn: accessibilityColumn, accessibilityValue: accessibilityValue)
     }
 
